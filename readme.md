@@ -1,9 +1,12 @@
-# AI Project 1 — Streamlit demo
+AI-Assisted Fiscal Policy Dashboard — ECO 317
 
-Run locally:
-1. python -m venv venv
-2. source venv/bin/activate  (or venv\Scripts\activate on Windows)
-3. pip install -r requirements.txt
-4. streamlit run app.py
+Run locally on Windows (PowerShell):
+1. cd C:\path\to\project-3
+2. python -m venv venv
+3. .\venv\Scripts\Activate.ps1
+4. pip install -r requirements.txt
+5. streamlit run app.py
 
-app.py shows the uploaded assignment PDF, allows pasting sample text, and runs a minimal preprocessing/demo pipeline.
+Deploy to Streamlit Community Cloud:
+- Push this repo to GitHub (root contains app.py and requirements.txt).
+- Go to https://share.streamlit.io → New app → choose repo, branch main, file app.py → Deploy.
