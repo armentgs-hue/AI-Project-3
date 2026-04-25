@@ -1,24 +1,26 @@
-import io
-import pandas as pd
-from typing import Dict
-from pdfminer.high_level import extract_text
+import streamlit as st
+import plotly.graph_objects as go
 
-def load_pdf_text(path: str) -> str:
-    return extract_text(path)
+def set_streamlit_style():
+    # Apply dark/navy background and Garamond font where possible
+    st.markdown(
+        """
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Garamond');
+        html, body, .stApp { background-color: #011627; color: #ffffff; font-family: 'Garamond', serif; }
+        .widget-label { color: #ffffff }
+        .stButton>button { background-color:#2EC4B6; color:#011627 }
+        </style>
+        """, unsafe_allow_html=True)
 
-def preprocess_text(text: str) -> Dict:
-    # Minimal deterministic preprocessing: lowercase, length, token count
-    t = text.strip()
-    tokens = t.split()
-    return {"text": t, "length": len(t), "token_count": len(tokens), "preview": t[:500]}
-
-def run_demo_pipeline(csv_file) -> pd.DataFrame:
-    # csv_file may be an UploadedFile or path
-    if hasattr(csv_file, "read"):
-        df = pd.read_csv(csv_file)
-    else:
-        df = pd.read_csv(csv_file)
-    first_col = df.columns[0]
-    df["processed_preview"] = df[first_col].astype(str).map(lambda s: s.strip()[:300])
-    df["token_count"] = df[first_col].astype(str).map(lambda s: len(s.split()))
-    return df
+def format_irf_fig(irfs, horizon):
+    t = list(range(horizon))
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=t, y=irfs["Output"], mode="lines", name="Output"))
+    fig.add_trace(go.Scatter(x=t, y=irfs["Consumption"], mode="lines", name="Consumption"))
+    fig.add_trace(go.Scatter(x=t, y=irfs["Investment"], mode="lines", name="Investment"))
+    fig.add_trace(go.Scatter(x=t, y=irfs["GovDebt"], mode="lines", name="GovDebt"))
+    fig.update_layout(plot_bgcolor="#ffffff", paper_bgcolor="#0b2136",
+                      font_color="#ffffff", legend=dict(bgcolor="#011627"),
+                      title="Impulse Response Functions")
+    return fig
